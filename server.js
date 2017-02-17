@@ -1,19 +1,12 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+
 var app  = express();
-var PORT = process.env.PORT || 3006;
-var todos = [{
-	id: 1,
-	description: "Talk to mom every day",
-	completed: false
-},{
-	id: 2,
-	description: "Eat eggs every day",
-	completed: false
-},{
-	id: 3,
-	description: "this is a test request",
-	completed: true
-}];
+var PORT = process.env.PORT || 3000;
+var todos = [];
+var nextId = 1;
+
+app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send('To do API Root');
@@ -40,6 +33,17 @@ app.get('/todos/:id', function (req, res) {
 	}
 
 });
+
+app.post('/todos', function (req, res) {
+	var body = req.body;
+	body.id = nextId;
+	todos.push(body);
+	nextId++;
+	console.log('body data: ' + body);
+	res.json(todos);
+});
+
+
 app.listen(PORT, function () {
 	console.log('Express listening on port: '+ PORT);
 });
